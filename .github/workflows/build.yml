@@ -1,0 +1,40 @@
+name: Build and Export AI Environment
+
+on:
+  workflow_dispatch: # ボタンをクリックした時だけ手動で動かす設定
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. GitHubサーバーの空き容量を無理やり空ける（超重要）
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      # 2. リポジトリのファイル（Dockerfile等）を読み込む
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 3. Dockerイメージのビルド
+      - name: Build Docker Image
+        run: docker build -t my-ai-env .
+
+      # 4. イメージを .tar に書き出し、さらに gzip で圧縮して容量を削る
+      - name: Save and Compress Docker Image
+        run: docker save my-ai-env | gzip > ai_env.tar.gz
+
+      # 5. 完成したファイルをブラウザからダウンロードできるようにアップロード
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-env-image
+          path: ai_env.tar.gz
+          retention-days: 1 # 容量節約のため、1日で自動削除する設定
