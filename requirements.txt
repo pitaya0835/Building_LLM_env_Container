@@ -1,0 +1,25 @@
+# --- GPU（CUDA）対応のPyTorchを指定 ---
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+fastapi
+uvicorn
+pydantic
+torch
+sentence-transformers
+transformers
+
+# --- 基本データ処理 & 機械学習 ---
+numpy
+pandas
+scikit-learn
+
+# --- 波形解析 & 画像処理 ---
+scipy
+opencv-python-headless
+
+# --- グラフ可視化 & Jupyter ---
+matplotlib
+seaborn
+jupyterlab
+ipykernel
+ipywidgets
